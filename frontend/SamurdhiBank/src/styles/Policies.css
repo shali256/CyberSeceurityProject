@@ -1,0 +1,64 @@
+.policies-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  .policy-card {
+    background-color: #ffffff; /* Lighter background for better contrast */
+    border: 1px solid #ddd; /* Softer border */
+    padding: 30px; /* More padding for a spacious look */
+    width: 250px; /* Increased width */
+    height: 180px; /* Increased height */
+    cursor: pointer;
+    text-align: center;
+    border-radius: 10px; /* Rounded corners for modern look */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
+  }
+  
+  .policy-card:hover {
+    background-color: #f0f8ff; /* Subtle color change on hover */
+    transform: translateY(-5px); /* Slight lift effect on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* More pronounced shadow on hover */
+  }
+  
+  .policy-modal {
+    background: white;
+    padding: 30px;
+    position: relative;
+    width: 750px; /* Increased width */
+    height: 75vh; /* Slightly increased height */
+    margin: auto;
+    border-radius: 2px;
+    overflow-y: auto;
+    margin-top: 40px;
+    border-style: solid;
+  }
+  
+  .policy-content {
+    max-height: 55vh; /* Adjusted height to match modal size */
+    overflow-y: auto;
+    padding-right: 10px;
+  }
+  
+  .acknowledgment {
+    margin-top: 40px;
+  }
+  
+  button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
