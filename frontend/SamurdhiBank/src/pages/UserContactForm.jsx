@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useAuthStore } from '../store/authStore';
+import Navbar from '../components/Navbar/Navbar';
+import Footer from '../components/Footer/Footer';
 
 const UserContactForm = () => {
   const { user } = useAuthStore();
@@ -20,6 +22,9 @@ const UserContactForm = () => {
   };
 
   return (
+    <div>
+      <Navbar/>
+
     <div className="max-w-lg mx-auto p-6 bg-white shadow-lg rounded-lg">
       <h2 className="text-2xl font-bold mb-4">Contact Us</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -68,6 +73,8 @@ const UserContactForm = () => {
           <p><strong>Message:</strong> {submitted.message}</p>
         </div>
       )}
+    </div>
+    <Footer/>
     </div>
   );
 };
