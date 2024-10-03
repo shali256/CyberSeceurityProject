@@ -11,6 +11,7 @@ import { connectDB } from "./db/connectDB.js";
 import authRoutes from "./routes/auth.route.js";
 import quizRoutes from "./routes/quiz.route.js";
 import contactRoutes from "./routes/contact.route.js";
+import policyRoutes from "./routes/policy.route.js";
 
 dotenv.config();
 const app = express();
@@ -29,6 +30,7 @@ app.use(cookieParser()); // allows us to parse incoming cookies
 app.use("/api/auth", authRoutes);
 app.use("/api/quiz", quizRoutes);
 app.use("/api/contact", contactRoutes);
+app.use("/api/policy", policyRoutes);
 
 // if (process.env.NODE_ENV === "production") {
 // 	app.use(express.static(path.join(__dirname, "/frontend/dist")));

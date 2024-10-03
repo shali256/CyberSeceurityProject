@@ -31,6 +31,11 @@ const Sidebar = () => {
             <BiSolidUserDetail className='text-lg'/> Employees
             </a>
         </div>
+        <div className="flex flex-col gap-5">
+            <a href='/userpolicy' className='flex items-center gap-5 text-lg font-semibold text-[#27374d] hover:bg-[#27374d] hover:text-[#dde6ed] transition ease-in-out duration-300 p-2 rounded-md'>
+            <BiSolidUserDetail className='text-lg'/> Policy
+            </a>
+        </div>
 
         <div className="flex flex-col gap-5">
             <a href='/questionanswers' className='flex items-center gap-5 text-lg font-semibold text-[#27374d] hover:bg-[#27374d] hover:text-[#dde6ed] transition ease-in-out duration-300 p-2 rounded-md'>

@@ -125,5 +125,9 @@ export const useAuthStore = create((set) => ({
         await axios.delete(`${API_URL}/delete-user/${userId}`);
     },
 
+	toggleUserBlock: async (userId) => {
+		const response = await axios.put(`${API_URL}/toggle-block/${userId}`);
+		return response.data;
+	},
 
 }));

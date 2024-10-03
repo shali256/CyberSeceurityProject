@@ -4,6 +4,7 @@ import axios from 'axios';
 import Modal from 'react-modal';
 import Footer from '../components/Footer/Footer.jsx';
 import '../styles/Policies.css';
+import { useAuthStore } from '../store/authStore';
 
 // Sample policy data with subtopics and sections
 const policies = [
@@ -1097,94 +1098,103 @@ const policies = [
 
 
 const Policies = () => {
+  const { user } = useAuthStore();  // Get the logged-in user
   const [selectedPolicy, setSelectedPolicy] = useState(null);
-  const [isRead, setIsRead] = useState({});
-  const [username, setUsername] = useState('');
+  const [isPolicyRead, setIsPolicyRead] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");  // To show error if policy already read
 
-  useEffect(() => {
-    const storedUsername = localStorage.getItem('username');
-    if (storedUsername) {
-      setUsername(storedUsername);
-    }
-  }, []);
-
-  const openModal = (policy) => setSelectedPolicy(policy);
+  const openModal = (policy) => {
+    setSelectedPolicy(policy);
+    setErrorMessage("");  // Reset error message when opening a new policy
+  };
   const closeModal = () => setSelectedPolicy(null);
 
-  const handleReadPolicy = async (policyId) => {
+  const handlePolicyRead = async (policy) => {
     try {
-      setIsRead({ ...isRead, [policyId]: true });
-      await axios.post('/api/policy-read', {
-        username,
-        policyId,
-        readStatus: true,
+      // Send a request to the backend to save policy read status
+      const response = await axios.post('http://localhost:5000/api/policy/read', {
+        user: user.name,
+        policyId: policy.id,
+        policyName: policy.name
       });
+
+      console.log(response.data.message);  // Log success message
+      setIsPolicyRead(true);  // Update state to indicate policy has been read
     } catch (error) {
-      console.error('Error updating policy read status:', error);
+      if (error.response && error.response.status === 400) {
+        setErrorMessage(error.response.data.message);  // Set error message if already read
+      } else {
+        console.error('Error saving policy read status', error);
+      }
     }
   };
 
   return (
-<div className="min-h-screen flex flex-col">
-  <Navbar />
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
 
-  <div className="flex flex-wrap gap-5 justify-center p-5">
-    {policies.map((policy) => (
-      <div
-        key={policy.id}
-        className="bg-white border border-gray-300 p-6 w-64 h-52 cursor-pointer text-center rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-xl hover:border-gray-400 duration-300 ease-in-out"
-        onClick={() => openModal(policy)}
-      >
-        <h3 className="font-bold text-lg text-gray-800">{policy.name}</h3>
-      </div>
-    ))}
-  </div>
-
-  {selectedPolicy && (
-    <Modal
-      isOpen={!!selectedPolicy}
-      onRequestClose={closeModal}
-      className="bg-white p-8 w-[90vw] md:w-[800px] h-[75vh] mx-auto rounded-lg shadow-lg overflow-y-auto border border-gray-200 mt-10 transition-transform duration-300"
-    >
-      <h2 className="font-bold text-2xl mb-4 text-gray-900">{selectedPolicy.name}</h2>
-      {Array.isArray(selectedPolicy.content) &&
-        selectedPolicy.content.map((section, index) => (
-          <div key={index} className="policy-section mt-6">
-            <h3 className="font-semibold text-xl text-gray-800">{section.subtopic}</h3>
-            {Array.isArray(section.text) ? (
-              <ul className="list-disc list-inside mt-2 text-gray-700">
-                {section.text.map((item, idx) => (
-                  <li key={idx} className="ml-4">{item}</li>
-                ))}
-              </ul>
-            ) : (
-              <p className="mt-2 text-gray-700">{section.text}</p>
-            )}
+      <div className="flex flex-wrap gap-5 justify-center p-5">
+        {policies.map((policy) => (
+          <div
+            key={policy.id}
+            className="bg-white border border-gray-300 p-6 w-64 h-52 cursor-pointer text-center rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-xl hover:border-gray-400 duration-300 ease-in-out"
+            onClick={() => openModal(policy)}
+          >
+            <h3 className="font-bold text-lg text-gray-800">{policy.name}</h3>
           </div>
         ))}
-
-      <div className="acknowledgment mt-8 flex items-center space-x-2">
-        <input
-          type="radio"
-          checked={isRead[selectedPolicy.id] || false}
-          onChange={() => handleReadPolicy(selectedPolicy.id)}
-          className="h-4 w-4 text-blue-500 focus:ring-blue-400 border-gray-300 rounded-full"
-        />
-        <span className="text-gray-600">I have read this policy</span>
       </div>
 
-      <button
-        onClick={closeModal}
-        className="mt-6 p-3 w-full md:w-auto bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out shadow-lg"
-      >
-        Close
-      </button>
-    </Modal>
-  )}
+      {selectedPolicy && (
+        <Modal
+          isOpen={!!selectedPolicy}
+          onRequestClose={closeModal}
+          className="bg-white p-8 w-[90vw] md:w-[800px] h-[75vh] mx-auto rounded-lg shadow-lg overflow-y-auto border border-gray-200 mt-10 transition-transform duration-300"
+        >
+          <h2 className="font-bold text-2xl mb-4 text-gray-900">{selectedPolicy.name}</h2>
+          {selectedPolicy.content.map((section, index) => (
+            <div key={index} className="policy-section mt-6">
+              <h3 className="font-semibold text-xl text-gray-800">{section.subtopic}</h3>
+              {Array.isArray(section.text) ? (
+                <ul className="list-disc list-inside mt-2 text-gray-700">
+                  {section.text.map((item, idx) => (
+                    <li key={idx} className="ml-4">{item}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="mt-2 text-gray-700">{section.text}</p>
+              )}
+            </div>
+          ))}
 
-  <Footer />
-</div>
+          {/* Acknowledgment section */}
+          <div className="acknowledgment mt-8 flex items-center space-x-2">
+            <input
+              type="radio"
+              className="h-4 w-4 text-blue-500 focus:ring-blue-400 border-gray-300 rounded-full"
+              checked={isPolicyRead}
+              onChange={() => handlePolicyRead(selectedPolicy)}  // Call API when checked
+              disabled={isPolicyRead || !!errorMessage}  // Disable if already read or error
+            />
+            <span className="text-gray-600">I have read this policy</span>
+          </div>
 
+          {/* Display error message if the policy is already read */}
+          {errorMessage && (
+            <p className="text-red-600 mt-4">{errorMessage}</p>
+          )}
+
+          <button
+            onClick={closeModal}
+            className="mt-6 p-3 w-full md:w-auto bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out shadow-lg"
+          >
+            Close
+          </button>
+        </Modal>
+      )}
+
+      <Footer />
+    </div>
   );
 };
 

@@ -21,6 +21,7 @@ import AdminHome from './pages/Admin/AdminHome.jsx';
 import UserPanal from "./pages/Admin/UserPanal.jsx";
 import UserContactForm from "./pages/UserContactForm.jsx";
 import ContactDashboard from "./pages/Admin/ContactDashboard.jsx";
+import PolicyDashboard from "./pages/Admin/PolicyDashboard.jsx";
 
 const ProtectedRoute = ({ children }) => {
 	const { isAuthenticated, user } = useAuthStore();
@@ -164,7 +165,11 @@ function App() {
 
 				<Route 
 					path="contactdashboard"
-					element={<ProtectedRoute><ContactDashboard/></ProtectedRoute>}/>			
+					element={<ProtectedRoute><ContactDashboard/></ProtectedRoute>}/>
+
+				<Route 
+					path="/userpolicy"
+					element={<ProtectedRoute><PolicyDashboard/></ProtectedRoute>}	/>		
 				
 
 				{/* catch all routes */}
