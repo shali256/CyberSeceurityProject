@@ -12,6 +12,7 @@ import {
 	updateUser,
 	deleteUser,
 	getUserLogins,
+	toggleUserBlock,
 
 } from "../controllers/auth.controller.js";
 import { verifyToken } from "../middleware/verifyToken.js";
@@ -36,5 +37,7 @@ router.put("/update-user/:userId", verifyToken, updateUser);
 router.delete("/delete-user/:userId", verifyToken, deleteUser);
 
 router.get('/logins', getUserLogins);
+
+router.put("/toggle-block/:userId", verifyToken, toggleUserBlock);
 
 export default router;

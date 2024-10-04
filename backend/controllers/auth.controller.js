@@ -103,11 +103,37 @@ export const login = async (req, res) => {
 		if (!user) {
 			return res.status(400).json({ success: false, message: "Invalid credentials" });
 		}
-		const isPasswordValid = await bcryptjs.compare(password, user.password);
-		if (!isPasswordValid) {
-			return res.status(400).json({ success: false, message: "Invalid credentials" });
+
+		// Check if the user is blocked
+		if (user.isBlocked) {
+			return res.status(403).json({
+				success: false,
+				message: "You have tried too many times. Your account is blocked. Contact our support team at 123-456-7890.",
+			});
 		}
 
+		const isPasswordValid = await bcryptjs.compare(password, user.password);
+		if (!isPasswordValid) {
+			// Increment login attempts
+			user.loginAttempts += 1;
+
+			// Block the user if attempts exceed 5
+			if (user.loginAttempts >= 5) {
+				user.isBlocked = true;
+			}
+
+			await user.save();
+
+			return res.status(400).json({
+				success: false,
+				message: user.isBlocked
+					? "You have tried too many times. Your account is blocked. Contact our support team at 123-456-7890."
+					: "Invalid credentials",
+			});
+		}
+
+		// Reset login attempts on successful login
+		user.loginAttempts = 0;
 		generateTokenAndSetCookie(res, user._id);
 
 		user.lastLogin = new Date();
@@ -126,6 +152,7 @@ export const login = async (req, res) => {
 		res.status(400).json({ success: false, message: error.message });
 	}
 };
+
 
 export const logout = async (req, res) => {
 	res.clearCookie("token");
@@ -327,3 +354,23 @@ export const getUserLogins = async (req, res) => {
 	  res.status(500).send('Server Error');
 	}
   };
+  
+  export const toggleUserBlock = async (req, res) => {
+    const { userId } = req.params;
+
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        // Toggle the isBlocked status
+        user.isBlocked = !user.isBlocked;
+        await user.save();
+
+        res.status(200).json({ success: true, message: `User has been ${user.isBlocked ? 'blocked' : 'unblocked'}.` });
+    } catch (error) {
+        console.error("Error toggling user block status: ", error);
+        res.status(500).json({ success: false, message: "Server error" });
+    }
+};

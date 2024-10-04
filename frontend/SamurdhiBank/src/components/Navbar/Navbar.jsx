@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore'; // Import the useAuthStore
-import logo from '../../assets/Logofiretrans.png';
+import logo from '../../assets/logosamurdhi.jpeg';
 
 
 const Navbar = () => {
@@ -60,14 +60,6 @@ const Navbar = () => {
                         Policies
                     </Link>
                 </li>
-                <li onClick={() => setMenu("support")}>
-                    <Link 
-                        to='/support' 
-                        className={`no-underline ${menu === "support" ? 'text-black border-b-4 border-red-500' : 'text-gray-500'}`}
-                    >
-                        Support
-                    </Link>
-                </li>
                 <li onClick={() => setMenu("quiz")}>
                     <Link 
                         to='/quiz' 
@@ -76,6 +68,15 @@ const Navbar = () => {
                         Quiz
                     </Link>
                 </li>
+                <li onClick={() => setMenu("support")}>
+                    <Link 
+                        to='/support' 
+                        className={`no-underline ${menu === "support" ? 'text-black border-b-4 border-red-500' : 'text-gray-500'}`}
+                    >
+                        Support
+                    </Link>
+                </li>
+
             </ul>
             <div className="flex items-center space-x-6">
                 <button 
@@ -86,7 +87,7 @@ const Navbar = () => {
                     {isLoading ? 'Logging out...' : 'Logout'}
                 </button>
                 <Link to='/profile'>
-                    <img src={user.profilePhoto} alt="Profile" className="w-14 h-14 rounded-full border-2 border-green-500 shadow-lg" />
+                    <img src={user.profilePhoto} alt="" className="w-14 h-14 rounded-full border-2 border-green-500 shadow-lg" />
                 </Link>
             </div>
         </div>

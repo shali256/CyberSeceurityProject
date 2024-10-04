@@ -63,12 +63,12 @@ export async function updateContactResponse(req, res) {
 
 
 
-export async function getContactByUsername(req, res) {
-        const { username} = req.params;
-        try {
-          const results = await Contact.find({ username });
-          res.status(200).json(results);
-        } catch (error) {
-          res.status(400).json({ success: false, message: error.message });
-        }
-      };
+  export async function getContactByUsername(req, res) {
+    const { username } = req.params;
+    try {
+      const results = await Contact.find({ username });
+      res.status(200).json(results);
+    } catch (error) {
+      res.status(400).json({ success: false, message: error.message });
+    }
+  }

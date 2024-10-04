@@ -41,7 +41,7 @@ const DashboardPage = () => {
 					>
 						<h3 className='text-2xl font-semibold text-green-600 mb-4'>Profile Information</h3>
 						<div className="flex items-center space-x-4 mb-4">
-							<img src={user.profilePhoto} alt="Profile" className='w-32 h-32 rounded-full border-2 border-green-500 shadow-lg' />
+							<img src={user.profilePhoto} alt="" className='w-32 h-32 rounded-full border-2 border-green-500 shadow-lg' />
 							<div>
 								<p className='text-lg font-medium text-gray-800'>Name: {user.firstname} {user.lastname}</p>
 								<p className='text-gray-600'>Email: {user.email}</p>

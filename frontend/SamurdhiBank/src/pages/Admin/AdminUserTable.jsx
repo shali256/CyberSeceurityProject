@@ -17,7 +17,7 @@ const AdminUsersTable = () => {
         address: '',
     });
 
-    const { getAllUsers, updateUser, deleteUser } = useAuthStore();
+    const { getAllUsers, updateUser, deleteUser, toggleUserBlock } = useAuthStore();
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -31,6 +31,54 @@ const AdminUsersTable = () => {
 
         fetchUsers();
     }, [getAllUsers]);
+
+    const handleBlockToggle = (user) => {
+        const action = user.isBlocked ? 'unblock' : 'block';
+        const confirmToggle = () => {
+            toggleUserBlock(user._id)
+                .then(() => {
+                    setUsers((prev) => prev.map((u) => (u._id === user._id ? { ...u, isBlocked: !u.isBlocked } : u)));
+                    toast.success(`User successfully ${action}ed.`, {
+                        autoClose: 3000,
+                    });
+                })
+                .catch((error) => {
+                    console.error(`Error ${action}ing user:`, error);
+                    toast.error(`Error ${action}ing user.`, {
+                        autoClose: 3000,
+                    });
+                });
+        };
+
+        const toastId = toast(
+            <div className="flex justify-between items-center p-4">
+                <span>Are you sure you want to {action} this user?</span>
+                <div className="flex space-x-2">
+                    <button 
+                        onClick={() => {
+                            confirmToggle();
+                            toast.dismiss(toastId);
+                        }} 
+                        className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+                        Yes
+                    </button>
+                    <button 
+                        onClick={() => toast.dismiss(toastId)} 
+                        className="bg-gray-300 text-black px-3 py-1 rounded hover:bg-gray-400">
+                        No
+                    </button>
+                </div>
+            </div>, 
+            {
+                autoClose: false,
+                closeButton: false,
+                position: "top-center",
+                style: { width: '400px', fontSize: '16px' },
+            }
+        );
+    };
+
+    
 
     const validateFormData = () => {
         const empidRegex = /^G\/\d{4}\/\d{2}$/; // Format: G/1236/12
@@ -144,6 +192,7 @@ const AdminUsersTable = () => {
                         <th className="border border-gray-400 px-4 py-2">Email</th>
                         <th className="border border-gray-400 px-4 py-2">Mobile</th>
                         <th className="border border-gray-400 px-4 py-2">Address</th>
+                        <th className="border border-gray-400 px-4 py-2">Status</th>
                         <th className="border border-gray-400 px-4 py-2">Actions</th>
                     </tr>
                 </thead>
@@ -157,8 +206,20 @@ const AdminUsersTable = () => {
                             <td className="border border-gray-400 px-4 py-2">{user.mobile}</td>
                             <td className="border border-gray-400 px-4 py-2">{user.address}</td>
                             <td className="border border-gray-400 px-4 py-2">
+                                <span className={user.isBlocked ? "text-red-500" : "text-green-500"}>
+                                    {user.isBlocked ? "Blocked" : "Safe"}
+                                </span>
+                            </td>
+                            <td className="border border-gray-400 px-4 py-2">
                                 <button onClick={() => handleUpdateClick(user)} className="mr-2 bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600">Update</button>
                                 <button onClick={() => handleDeleteClick(user._id)} className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">Delete</button>
+                                <button
+                                    onClick={() => handleBlockToggle(user)}
+                                    className={`ml-2 text-white px-5 py-1 rounded hover:bg-opacity-80 ${user.isBlocked ? 'bg-green-500' : 'bg-red-500'}`}
+                                    style={{ width: '100px' }} 
+                                >
+                                    {user.isBlocked ? 'Unblock' : 'Block'}
+                                </button>
                             </td>
                         </tr>
                     ))}
