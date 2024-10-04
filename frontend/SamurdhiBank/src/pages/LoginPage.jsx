@@ -13,11 +13,19 @@ const LoginPage = () => {
 	const [password, setPassword] = useState("");
 	const [captchaValue, setCaptchaValue] = useState(null);
 	const navigate = useNavigate();
+	const [nameError, setNameError] = useState("");
 
 	const { login, isLoading, error } = useAuthStore();
 
 	const handleLogin = async (e) => {
 		e.preventDefault();
+
+		if (!validateName(name)) {
+			setNameError("Full name can only contain letters and spaces.");
+			return;
+		} else {
+			setNameError(""); // Clear error if valid
+		}
 		if (!captchaValue) {
 			alert("Please complete the CAPTCHA."); // Alert if captcha is not completed
 			return;
@@ -35,6 +43,11 @@ const LoginPage = () => {
 		} catch (error) {
 			console.error(error);
 		}
+	};
+	const validateName = (name) => {
+		// Regular expression to allow only letters and spaces
+		const nameRegex = /^[A-Za-z\s]+$/;
+		return nameRegex.test(name);
 	};
 
 	return (
@@ -60,8 +73,16 @@ const LoginPage = () => {
 							type='name'
 							placeholder='Name'
 							value={name}
-							onChange={(e) => setName(e.target.value)}
+							onChange={(e) => {
+								setName(e.target.value);
+								if (validateName(e.target.value)) {
+									setNameError(""); // Clear error if valid
+								} else {
+									setNameError("Full name can only contain letters and spaces.");
+								}
+							}}
 						/>
+						{ nameError && <p className='text-red-500 font-semibold mt-2'>{nameError}</p>}
 
 						<Input
 							icon={Lock}

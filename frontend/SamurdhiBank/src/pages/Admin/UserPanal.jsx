@@ -29,7 +29,7 @@ const UserPanal = () => {
                         Add New Employee
                     </button>
                     <AdminUsersTable />
-                    <AddEmployeeModal isOpen={isModalOpen} onClose={closeModal} />
+                    <AddEmployeeModal isOpen={isModalOpen} onClose={closeModal} onEmployeeAdded={refreshPage}/>
                 </div>
             </div>
             </div>

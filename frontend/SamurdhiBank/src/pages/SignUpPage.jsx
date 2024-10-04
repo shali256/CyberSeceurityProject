@@ -12,6 +12,7 @@ const SignUpPage = () => {
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [nameError, setNameError] = useState("");
 	const navigate = useNavigate();
 
 	const { signup, error, isLoading } = useAuthStore();
@@ -19,12 +20,25 @@ const SignUpPage = () => {
 	const handleSignUp = async (e) => {
 		e.preventDefault();
 
+		if (!validateName(name)) {
+			setNameError("Full name can only contain letters and spaces.");
+			return;
+		} else {
+			setNameError(""); // Clear error if valid
+		}
+
 		try {
 			await signup(empid, email, password, name);
 			navigate("/verify-email");
 		} catch (error) {
 			console.log(error);
 		}
+	};
+
+	const validateName = (name) => {
+		// Regular expression to allow only letters and spaces
+		const nameRegex = /^[A-Za-z\s]+$/;
+		return nameRegex.test(name);
 	};
 	return (
 		<div className='min-h-screen bg-gradient-to-br
@@ -54,13 +68,21 @@ const SignUpPage = () => {
 						value={empid}
 						onChange={(e) => setEmpid(e.target.value)}
 					/>
-					<Input
-						icon={User}
-						type='text'
-						placeholder='Full Name'
-						value={name}
-						onChange={(e) => setName(e.target.value)}
-					/>
+				<Input
+							icon={User}
+							type='text'
+							placeholder='Full Name'
+							value={name}
+							onChange={(e) => {
+								setName(e.target.value);
+								if (validateName(e.target.value)) {
+									setNameError(""); // Clear error if valid
+								} else {
+									setNameError("Full name can only contain letters and spaces.");
+								}
+							}}
+						/>
+						{ nameError && <p className='text-red-500 font-semibold mt-2'>{nameError}</p>}
 					<Input
 						icon={Mail}
 						type='email'

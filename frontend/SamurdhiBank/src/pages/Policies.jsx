@@ -1107,7 +1107,10 @@ const Policies = () => {
     setSelectedPolicy(policy);
     setErrorMessage("");  // Reset error message when opening a new policy
   };
-  const closeModal = () => setSelectedPolicy(null);
+  const closeModal = () => {
+    setSelectedPolicy(null);
+    window.location.reload();  // Refresh the page after the modal is closed
+  };
 
   const handlePolicyRead = async (policy) => {
     try {
@@ -1134,17 +1137,16 @@ const Policies = () => {
       <Navbar />
 
       <div className="flex flex-wrap gap-5 justify-center p-5">
-        {policies.map((policy) => (
-          <div
-            key={policy.id}
-            className="bg-white border border-gray-300 p-6 w-64 h-52 cursor-pointer text-center rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-xl hover:border-gray-400 duration-300 ease-in-out"
-            onClick={() => openModal(policy)}
-          >
-            <h3 className="font-bold text-lg text-gray-800">{policy.name}</h3>
-          </div>
-        ))}
-      </div>
-
+      {policies.map((policy) => (
+        <div
+          key={policy.id}
+          className="bg-white border border-gray-300 p-6 w-64 h-52 cursor-pointer text-center rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-xl hover:border-gray-400 duration-300 ease-in-out flex flex-col items-center justify-center"
+          onClick={() => openModal(policy)}
+        >
+          <h3 className="font-bold text-lg text-gray-800">{policy.name}</h3>
+        </div>
+      ))}
+    </div>
       {selectedPolicy && (
         <Modal
           isOpen={!!selectedPolicy}
@@ -1173,8 +1175,8 @@ const Policies = () => {
               type="radio"
               className="h-4 w-4 text-blue-500 focus:ring-blue-400 border-gray-300 rounded-full"
               checked={isPolicyRead}
-              onChange={() => handlePolicyRead(selectedPolicy)}  // Call API when checked
-              disabled={isPolicyRead || !!errorMessage}  // Disable if already read or error
+              onChange={() => handlePolicyRead(selectedPolicy)}  
+              disabled={isPolicyRead || !!errorMessage}  
             />
             <span className="text-gray-600">I have read this policy</span>
           </div>

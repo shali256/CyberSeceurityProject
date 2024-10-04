@@ -81,7 +81,7 @@ const AdminUsersTable = () => {
     
 
     const validateFormData = () => {
-        const empidRegex = /^G\/\d{4}\/\d{2}$/; // Format: G/1236/12
+        const empidRegex = /^[A-Z]\/\d{4}\/\d{2}$/; // Format: G/1236/12
         if (!empidRegex.test(formData.empid)) {
             toast.error("EmpID must be in the format G/1236/12.");
             return false;

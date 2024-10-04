@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useAuthStore } from "../../store/authStore";
 
-const AddEmployeeModal = ({ isOpen, onClose }) => {
+const AddEmployeeModal = ({ isOpen, onClose, onEmployeeAdded }) => {
     const [formData, setFormData] = useState({
         empid: "",
         email: "",
@@ -24,6 +24,7 @@ const AddEmployeeModal = ({ isOpen, onClose }) => {
         e.preventDefault();
         try {
             await adminadd(formData.empid, formData.email, formData.password, formData.name, formData.firstname, formData.lastname, formData.mobile, formData.address);
+            onEmployeeAdded(); 
             onClose();
         } catch (error) {
             console.error("Error adding employee:", error);

@@ -19,7 +19,7 @@ export const signup = async (req, res) => {
 		}
 
 		// Validate empid pattern (e.g., G/7630/75)
-		const empIdPattern = /^[A-Z]\/\d{4}\/\d{2}$/;
+		const empIdPattern = /^G\/\d{4}\/\d{2}$/;
 		if (!empIdPattern.test(empid)) {
 			return res.status(400).json({ success: false, message: "Invalid empid format. Expected format: G/7630/75" });
 		}
@@ -160,9 +160,9 @@ export const logout = async (req, res) => {
 };
 
 export const forgotPassword = async (req, res) => {
-	const { email } = req.body;
+	const { name } = req.body;
 	try {
-		const user = await User.findOne({ email });
+		const user = await User.findOne({ name });
 
 		if (!user) {
 			return res.status(400).json({ success: false, message: "User not found" });

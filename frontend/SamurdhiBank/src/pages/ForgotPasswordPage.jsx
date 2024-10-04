@@ -7,14 +7,14 @@ import { Link } from "react-router-dom";
 import FloatingShape from "../components/FloatingShape";
 
 const ForgotPasswordPage = () => {
-	const [email, setEmail] = useState("");
+	const [name, setName] = useState("");
 	const [isSubmitted, setIsSubmitted] = useState(false);
 
 	const { isLoading, forgotPassword } = useAuthStore();
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		await forgotPassword(email);
+		await forgotPassword(name);
 		setIsSubmitted(true);
 	};
 
@@ -41,14 +41,14 @@ const ForgotPasswordPage = () => {
 				{!isSubmitted ? (
 					<form onSubmit={handleSubmit}>
 						<p className='text-gray-300 mb-6 text-center'>
-							Enter your email address and we'll send you a link to reset your password.
+							Enter your Name and we'll send you a link to reset your password.
 						</p>
 						<Input
 							icon={Mail}
-							type='email'
-							placeholder='Email Address'
-							value={email}
-							onChange={(e) => setEmail(e.target.value)}
+							type='name'
+							placeholder='User Name'
+							value={name}
+							onChange={(e) => setName(e.target.value)}
 							required
 						/>
 						<motion.button
@@ -71,7 +71,7 @@ const ForgotPasswordPage = () => {
 							<Mail className='h-8 w-8 text-white' />
 						</motion.div>
 						<p className='text-gray-300 mb-6'>
-							If an account exists for {email}, you will receive a password reset link shortly.
+							If an account exists for {name}, you will receive a password reset link shortly.
 						</p>
 					</div>
 				)}
